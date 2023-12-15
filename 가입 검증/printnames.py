@@ -1,3 +1,6 @@
+# scp to srv/http/kmla/data/user_pending_list/
+# python3 printnames.py
+
 import os
 for files in os.listdir("."):
     if files.endswith(".txt"):
