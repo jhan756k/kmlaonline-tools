@@ -4,6 +4,8 @@ import datetime
 
 def get_food():
   food = dict()
+  for month in range(1, 13):
+    food[month] = dict()
   now = datetime.datetime.now()
 
   URI = "https://open.neis.go.kr/hub/mealServiceDietInfo"
@@ -17,7 +19,8 @@ def get_food():
   ATPT_OFCDC_SC_CODE = "K10"
   SD_SCHUL_CODE = "7801132"
   MLSV_FROM_YMD = str(now.year) + "0101"
-  MLSV_TO_YMD = str(now.year) + "0328"
+  MLSV_TO_YMD = str(now.year) + "1231"
+  pSize = 1000
 
   params = {
     "KEY": KEY,
@@ -25,7 +28,8 @@ def get_food():
     "ATPT_OFCDC_SC_CODE": ATPT_OFCDC_SC_CODE,
     "SD_SCHUL_CODE": SD_SCHUL_CODE,
     "MLSV_FROM_YMD": MLSV_FROM_YMD,
-    "MLSV_TO_YMD": MLSV_TO_YMD
+    "MLSV_TO_YMD": MLSV_TO_YMD,
+    "pSize": pSize
   }
 
   response = requests.get(URI, params=params)
@@ -49,9 +53,7 @@ def get_food():
           mealtype = "lunch"
         elif mealtype == "3":
           mealtype = "dinner"
-        print(mealtype)
-        if m not in food:
-          food[m] = dict()
+
         if d not in food[m]:
           food[m][d] = dict()
         if mealtype not in food[m][d]:
@@ -67,12 +69,8 @@ def get_food():
   # add dinner if not exist
   for month in food:
     for day in food[month]:
-      print(month, day)
-      try:
-        print(food[month][day]["dinner"])
-      except KeyError:
+      if "dinner" not in food[month][day]:
         food[month][day]["dinner"] = ["급식이 없습니다."]
-        continue
 
   # json_obj = json.dumps(food, ensure_ascii=False, indent=4, separators=(',', ': '))
   with open("./급식 정보/data.json", "w", encoding='UTF-8') as outfile:
