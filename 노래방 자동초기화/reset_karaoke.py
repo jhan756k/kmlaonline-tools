@@ -1,6 +1,11 @@
 import requests
 
 url = 'https://kmlaonline.net/proc/util/karaoke'
+
+session = requests.Session()
+response = session.get('https://kmlaonline.net/')
+cookies = response.cookies
+
 params = {
   'util_action': 'clear_week'
 }
